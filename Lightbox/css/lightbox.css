@@ -1,0 +1,112 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: rgb(85, 83, 214);
+}
+
+h1 {
+    color: #FFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3em;
+    margin: 30px 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Images's gallery styles*/
+
+.lightbox {
+    margin: 0 auto;
+    width: 90%;
+}
+
+/* Styles for lightbox container */
+
+.lightbox .lightbox-container {
+    background-color: rgba(21,21,21,.75);
+    opacity: 0;
+    visibility: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+
+    transition: .2s all ease-out
+}
+
+/* This class allow to the lightbox, activate the image in screen*/
+
+.lightbox .active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox .lightbox-show {
+    max-width: 1000px;
+    width: 90%;
+}
+
+.lightbox .lightbox-show img {
+    width: 100%;
+}
+
+.lightbox .lightbox-images img {
+    box-shadow: 2px 2px 2px rgba(0,0,0,.5);
+    border: 2px solid #212121;
+    background: #fff;
+    cursor: pointer;
+    height: 300px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 2px;
+    width: 100%;
+
+    transition: .5s all ease-out;
+}
+
+/* Button for close the lightbox window */
+
+.lightbox-btn {
+    background: transparent;
+    border: none;
+    color: #FFF;
+    cursor: pointer;
+    font-size: 30px;
+    line-height: 1.5;
+    outline: none;
+    width: 50px;
+}
+
+.lightbox-btn:hover {
+    color: gray;
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (min-width: 700px) {
+    .lightbox .lightbox-images img {
+        width: 48%;
+    }
+}
+
+@media screen and (min-width: 1350px) {
+    .lightbox .lightbox-images img {
+        width: 32%;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    .lightbox .lightbox-images img {
+        width: 24%;
+    }
+}
