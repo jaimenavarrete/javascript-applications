@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable - Javascript</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="options">
+                <div class="buttons">
+                    <button><i class="las la-plus-circle"></i></button>
+                    <button><i class="las la-pen"></i></button>
+                    <button><i class="las la-trash"></i></button>
+                </div>
+                <div class="search-bar">
+                    <span>Search by:</span>
+                    <select name="search-item" id="search-item">
+                        <option value="status">Status</option>
+                        <option value="name">Name</option>
+                        <option value="company">Company</option>
+                        <option value="country">Country</option>
+                        <option value="email">Email</option>
+                    </select>
+                    <input type="text" id="search-bar">
+                </div>
+            </div>
+
+            <table id="clients">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="select"></th>
+                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Country</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="rows-clients">
+                    <!-- <tr>
+                        <td><input type="checkbox" name="select"></td>
+                        <td><span class="status active">Active</span></td>
+                        <td>Jaime Navarrete</td>
+                        <td>Universidad Don Bosco</td>
+                        <td>El Salvador</td>
+                        <td>jaime@correo.com</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="select"></td>
+                        <td><span class="status away">Away</span></td>
+                        <td>Jaime Navarrete</td>
+                        <td>Universidad Don Bosco</td>
+                        <td>El Salvador</td>
+                        <td>jaime@correo.com</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="select"></td>
+                        <td><span class="status offline">Offline</span></td>
+                        <td>Jaime Navarrete</td>
+                        <td>Universidad Don Bosco</td>
+                        <td>El Salvador</td>
+                        <td>jaime@correo.com</td>
+                    </tr> -->
+                </tbody>
+            </table>
+
+            <div class="footer">
+                <div class="show-entries">
+                    <p>Show 
+                        <select name="entries" id="entries">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="all">All</option>
+                        </select>
+                    entries </p>
+                </div>
+                <div class="buttons pagination">
+                    <button class="pagination-item active">1</button>
+                    <button class="pagination-item">2</button>
+                    <button class="pagination-item">3</button>
+                    <span class="divider">...</span>
+                    <button class="pagination-item">4</button>
+                    <button class="pagination-item">5</button>
+                    <button class="pagination-item">6</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/scripts.js"></script>
+</body>
+</html>

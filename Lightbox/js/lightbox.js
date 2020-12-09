@@ -13,6 +13,9 @@ lightbox.addEventListener('click', e => {
         imageClone = image.cloneNode()
     
     if(index > -1) {
+        if(lightboxShow.children[3]) {
+            lightboxShow.removeChild(lightboxShow.children[3])
+        }
         lightboxShow.appendChild(imageClone)
         lightboxContainer.classList.add('active')
     }
@@ -20,7 +23,6 @@ lightbox.addEventListener('click', e => {
 
 btnCloseLightbox.addEventListener('click', () => {
     lightboxContainer.classList.remove('active')
-    lightboxShow.removeChild(lightboxShow.children[3])
 })
 
 lightboxContainer.addEventListener('click', e => {
@@ -28,7 +30,6 @@ lightboxContainer.addEventListener('click', e => {
 
     if(container === e.currentTarget) {
         lightboxContainer.classList.remove('active')
-        lightboxShow.removeChild(lightboxShow.children[3])
     }
 })
 
@@ -71,18 +72,3 @@ btnNextLightbox.addEventListener('click', () => {
         lightboxShow.appendChild(newImage)
     }
 })
-
-// const showImages = () => {
-//     let images = lightboxImages.querySelectorAll('img'),
-//         scroll = document.documentElement.scrollTop
-
-//     images.forEach(el => {
-//         let positionImage = el.offsetTop
-        
-//         if(positionImage - 500 < scroll) {
-//             el.style.opacity = 1
-//         }
-//     })
-// }
-
-// addEventListener('scroll', showImages)
