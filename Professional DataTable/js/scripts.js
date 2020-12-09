@@ -1,39 +1,13 @@
-// const btn = document.getElementById('btn'),
-//       table = document.getElementById('rowsClients')
+// VARIABLES AND CONSTANTS
 
-// const getClients = () => {
-//     const xhttp = new XMLHttpRequest()
+const rowsClients = document.getElementById('rows-clients'),
+      checkboxSelectAll = document.getElementById('select-all')
 
-//     xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2', true)
-//     xhttp.send()
-
-//     xhttp.onreadystatechange = () => {
-//         if(xhttp.readyState == 4 && xhttp.status == 200) {
-//             let data = JSON.parse(xhttp.responseText)
-            
-//             table.innerHTML = ''
-
-//             for(let row of data) {
-            
-//                 table.innerHTML += `
-//                     <tr>
-//                         <td>${row.nombre}</td>
-//                         <td>${row.email}</td>
-//                     </tr>
-//                 `
-//             }
-//         }
-//     }
-// }
-
-// btn.addEventListener('click', getClients)
+let currentPage = 0,
+    pages = 0
 
 
-
-// VARIABLES
-
-const rowsClients = document.getElementById('rows-clients')
-
+// FUNCTIONS
 
 // Gets all the clients from our JSON file, with AJAX
 
@@ -77,10 +51,7 @@ const getClientsData = () => {
     }
 }
 
-
-// FUNCTIONS
-
-const selectRowTable = e => {
+const checkRowTable = e => {
     let rows = Array.from(rowsClients.querySelectorAll('tr'))
 
     for(let row of rows) {
@@ -92,8 +63,24 @@ const selectRowTable = e => {
     }
 }
 
+const checkAllRowsTable = () => {
+    let rows = Array.from(rowsClients.querySelectorAll('tr')),
+        selectAll = false;
+
+    selectAll = checkboxSelectAll.checked ? true : false
+
+    for(let row of rows) {
+        let checkbox = row.querySelector('input')
+
+        checkbox.checked = selectAll ? true : false
+    }
+}
+
 
 // EVENTS
 
 addEventListener('DOMContentLoaded', getClientsData)
-rowsClients.addEventListener('click', e => selectRowTable(e))
+
+rowsClients.addEventListener('click', e => checkRowTable(e))
+
+checkboxSelectAll.addEventListener('change', checkAllRowsTable)
