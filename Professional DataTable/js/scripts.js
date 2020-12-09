@@ -1,10 +1,11 @@
 // VARIABLES AND CONSTANTS
 
-const rowsClients = document.getElementById('rows-clients'),
+const clientsData = [],
+      rowsClients = document.getElementById('rows-clients'),
       checkboxSelectAll = document.getElementById('select-all')
 
-let currentPage = 0,
-    pages = 0
+let currentPage = 1,
+    pages = 1
 
 
 // FUNCTIONS
@@ -12,42 +13,54 @@ let currentPage = 0,
 // Gets all the clients from our JSON file, with AJAX
 
 const getClientsData = () => {
-    const xhttp = new XMLHttpRequest()
+    return new Promise(resolve => {
+        const xhttp = new XMLHttpRequest()
 
-    xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2')
-    xhttp.send()
+        xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2')
+        xhttp.send()
 
-    xhttp.onreadystatechange = () => {
-        if(xhttp.readyState === 4 && xhttp.status === 200) {
-            const data = JSON.parse(xhttp.responseText)
+        xhttp.onreadystatechange = () => {
+            if(xhttp.readyState === 4 && xhttp.status === 200) {
+                const data = JSON.parse(xhttp.responseText)
 
-            rowsClients.innerHTML = ''
-
-            for(let item of data) {
-                switch(item.status) {
-                    case 0:
-                        item.status = 'Offline'
-                        break;
-                    case 1:
-                        item.status = 'Away'
-                        break;
-                    case 2:
-                        item.status = 'Active'
-                        break;
+                for(let item of data) {
+                    clientsData.push(item)
                 }
 
-                rowsClients.innerHTML += `
-                    <tr>
-                        <td><input type="checkbox" name="select"></td>
-                        <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
-                        <td>${item.nombre}</td>
-                        <td>${item.company}</td>
-                        <td>${item.country}</td>
-                        <td>${item.email}</td>
-                    </tr>
-                `
+                resolve(true)
             }
         }
+    })
+}
+
+// Print the data in the table
+
+const printClientsData = () => {
+    rowsClients.innerHTML = ''
+
+    for(let item of clientsData) {
+        switch(item.status) {
+            case 0:
+                item.status = 'Offline'
+                break;
+            case 1:
+                item.status = 'Away'
+                break;
+            case 2:
+                item.status = 'Active'
+                break;
+        }
+
+        rowsClients.innerHTML += `
+            <tr>
+                <td><input type="checkbox" name="select"></td>
+                <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
+                <td>${item.nombre}</td>
+                <td>${item.company}</td>
+                <td>${item.country}</td>
+                <td>${item.email}</td>
+            </tr>
+        `
     }
 }
 
@@ -79,7 +92,11 @@ const checkAllRowsTable = () => {
 
 // EVENTS
 
-addEventListener('DOMContentLoaded', getClientsData)
+addEventListener('DOMContentLoaded', async () => {
+    await getClientsData();
+
+    printClientsData();
+})
 
 rowsClients.addEventListener('click', e => checkRowTable(e))
 
