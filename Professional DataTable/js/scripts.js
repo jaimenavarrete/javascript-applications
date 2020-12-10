@@ -3,7 +3,8 @@
 const searchItem = document.getElementById('search-item'),
       searchBar = document.getElementById('search-bar'),
       checkboxSelectAll = document.getElementById('select-all'),
-      rowsClients = document.getElementById('rows-clients')
+      rowsClientsContainer = document.getElementById('rows-clients'),
+      entriesNumber = document.getElementById('entries-number')
 
 let clientsData = [],
     searchedClientsData = [],
@@ -44,61 +45,60 @@ const getClientsData = () => {
     })
 }
 
+// Print data element in the navigator's DOM
+
+const printRegister = item => {
+    rowsClientsContainer.innerHTML += `
+        <tr>
+            <td><input type="checkbox" name="select"></td>
+            <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
+            <td>${item.nombre}</td>
+            <td>${item.company}</td>
+            <td>${item.country}</td>
+            <td>${item.email}</td>
+        </tr>
+    `
+}
+
 // Print all the data in the table
 
 const printCompleteClientsData = () => {
-    rowsClients.innerHTML = ''
+    
+
+    rowsClientsContainer.innerHTML = ''
 
     for(let item of clientsData) {
-        rowsClients.innerHTML += `
-            <tr>
-                <td><input type="checkbox" name="select"></td>
-                <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
-                <td>${item.nombre}</td>
-                <td>${item.company}</td>
-                <td>${item.country}</td>
-                <td>${item.email}</td>
-            </tr>
-        `
+        printRegister(item)
     }
 }
 
 // Get the data that was searched in the text field
 
 const getSearchedClientsData = () => {
-    searchedClientsData = clientsData.filter(item =>
-        item[searchItem.value].toLowerCase().includes(searchBar.value.toLowerCase())
-    )
+    searchedClientsData = clientsData.filter(item => {
+        if(searchItem.value === 'anything') {
+
+            return Object.values(item).reduce((exist, data) => {
+                if(exist) return exist
+
+                return data.toLowerCase().includes(searchBar.value.toLowerCase())
+            }, false)
+        }
+
+        return item[searchItem.value].toLowerCase().includes(searchBar.value.toLowerCase())
+    })
 }
 
-// Print the data that was searched in the text field
+// Print the data that was searched in the text field, into the table
 
 const printSearchedClientsData = () => {
     if(searchBar.value !== "") {
         getSearchedClientsData()
 
-        rowsClients.innerHTML = ''
+        rowsClientsContainer.innerHTML = ''
 
         for(let item of searchedClientsData) {
-            switch(item.status) {
-                case 0: item.status = 'Offline'
-                    break;
-                case 1: item.status = 'Away'
-                    break;
-                case 2: item.status = 'Active'
-                    break;
-            }
-
-            rowsClients.innerHTML += `
-                <tr>
-                    <td><input type="checkbox" name="select"></td>
-                    <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
-                    <td>${item.nombre}</td>
-                    <td>${item.company}</td>
-                    <td>${item.country}</td>
-                    <td>${item.email}</td>
-                </tr>
-            `
+            printRegister(item)
         }
     }
     else {
@@ -106,26 +106,31 @@ const printSearchedClientsData = () => {
     }
 }
 
-// Checks o unchecks the client row where we do click
+// Check or uncheck the client row where we do click
 
 const checkRowTable = e => {
-    let rows = Array.from(rowsClients.querySelectorAll('tr'))
+    const rows = Array.from(rowsClientsContainer.querySelectorAll('tr'))
 
     for(let row of rows) {
-        if(row === e.target.parentElement) {
-            let checkbox = e.target.parentElement.querySelector('input')
+        const parent = e.target.parentElement
+
+        if(row === parent) {
+            const checkbox = parent.querySelector('input')
 
             checkbox.checked = !checkbox.checked
+
+            return
         }
     }
 }
 
 const checkAllRowsTable = () => {
-    let rows = Array.from(rowsClients.querySelectorAll('tr')),
+    const rows = Array.from(rowsClientsContainer.querySelectorAll('tr')),
         selectAll = checkboxSelectAll.checked ? true : false;
 
     for(let row of rows) {
-        let checkbox = row.querySelector('input')
+        const checkbox = row.querySelector('input')
+
         checkbox.checked = selectAll ? true : false
     }
 }
@@ -140,6 +145,6 @@ addEventListener('DOMContentLoaded', async () => {
 
 searchBar.addEventListener('keyup', printSearchedClientsData)
 
-rowsClients.addEventListener('click', e => checkRowTable(e))
+rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
 
 checkboxSelectAll.addEventListener('change', checkAllRowsTable)
