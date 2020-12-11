@@ -4,13 +4,14 @@ const searchItem = document.getElementById('search-item'),
       searchBar = document.getElementById('search-bar'),
       checkboxSelectAll = document.getElementById('select-all'),
       rowsClientsContainer = document.getElementById('rows-clients'),
-      entriesNumber = document.getElementById('entries-number')
+      entriesNumber = document.getElementById('entries-number'),
+      paginationContainer = document.getElementById('pagination-container')
 
 let clientsData = [],
     searchedClientsData = [],
-    clientsPerPage = 1,
-    currentPage = 1,
-    pages = 1
+    clientsPerPage,
+    currentPage = 0,
+    pages
 
 
 // FUNCTIONS
@@ -22,6 +23,7 @@ const getClientsData = () => {
         const xhttp = new XMLHttpRequest()
 
         xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2')
+        // xhttp.open('GET', 'http://www.json-generator.com/api/json/get/ceDXcPLqsy?indent=2') // 3200 Datos
         xhttp.send()
 
         xhttp.onreadystatechange = () => {
@@ -63,6 +65,20 @@ const getPagesNumber = () => {
     pages = Math.ceil(clientsData.length / clientsPerPage)
 }
 
+const printPaginationButtons = () => {
+    paginationContainer.innerHTML = ''
+
+    for(let i = 0; i < pages; i++) {
+        if(entriesNumber.value === 'all') return
+
+        paginationContainer.innerHTML += `
+            <button class="pagination-item ${currentPage === i ? 'active' : ''}">
+                ${i+1}
+            </button>
+        `
+    }
+}
+
 const printRegister = (position, item) => {
     rowsClientsContainer.innerHTML += `
         <tr>
@@ -79,11 +95,16 @@ const printRegister = (position, item) => {
 
 const printCompleteClientsData = () => {
     getEntriesNumber()
+
     getPagesNumber()
+    printPaginationButtons()
+
+    let initialClient = currentPage * clientsPerPage,
+        finalClient = initialClient + clientsPerPage - 1
 
     rowsClientsContainer.innerHTML = ''
 
-    for(let i = 0; i < clientsPerPage; i++)
+    for(let i = initialClient; i < finalClient; i++)
         printRegister(i+1, clientsData[i])
 }
 
@@ -93,7 +114,7 @@ const getSearchedClientsData = () => {
         if(searchItem.value === 'anything') {
             client.id = ''
 
-            // Gets the values in the client object and put them into an array
+            // Gets the values of the client object and put them into an array
             // then seeks if the text exists in one of the array's elements
             for(let data of Object.values(client))
                 if(data.toLowerCase().includes(searchBar.value.toLowerCase()))
@@ -111,6 +132,7 @@ const printSearchedClientsData = () => {
         getSearchedClientsData()
 
         rowsClientsContainer.innerHTML = ''
+        paginationContainer.innerHTML = ''
 
         for(let i = 0; i < searchedClientsData.length; i++)
             printRegister(i+1, searchedClientsData[i])
@@ -161,8 +183,8 @@ addEventListener('DOMContentLoaded', async () => {
 
 searchBar.addEventListener('keyup', printSearchedClientsData)
 
-rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
-
 checkboxSelectAll.addEventListener('change', checkAllRowsTable)
+
+rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
 
 entriesNumber.addEventListener('change', printCompleteClientsData)
