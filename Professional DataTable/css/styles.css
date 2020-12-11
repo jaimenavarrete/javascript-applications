@@ -73,6 +73,38 @@ body {
     width: 100%;
 }
 
+/* Estilos de la pantalla de carga de datos */
+
+.container .loading {
+    border: 8px solid #FFFFFF;
+    border-top: 8px solid transparent;
+    border-radius: 50%;
+    height: 50px;
+    margin: 0 auto;
+    width: 50px;
+
+    animation-name: girar;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes girar {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.container .loading-text {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 0;
+    text-align: center;
+}
+
 /* Estilos de la cabecera */
 
 .container table thead tr {

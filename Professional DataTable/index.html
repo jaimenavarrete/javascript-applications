@@ -39,6 +39,7 @@
             <table id="clients">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th><input type="checkbox" name="selectAll" id="select-all"></th>
                         <th>Status</th>
                         <th>Name</th>
@@ -48,7 +49,12 @@
                     </tr>
                 </thead>
                 <tbody id="rows-clients">
-                
+                    <tr>
+                        <td colspan="7">
+                            <div class="loading"></div>
+                            <p class="loading-text">Getting data...</p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -64,7 +70,7 @@
                         </select>
                     entries </p>
                 </div>
-                <div class="buttons pagination">
+                <div id="pagination" class="buttons pagination">
                     <button class="pagination-item active">1</button>
                     <button class="pagination-item">2</button>
                     <button class="pagination-item">3</button>

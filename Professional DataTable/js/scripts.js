@@ -8,6 +8,7 @@ const searchItem = document.getElementById('search-item'),
 
 let clientsData = [],
     searchedClientsData = [],
+    clientsPerPage = 1,
     currentPage = 1,
     pages = 1
 
@@ -39,17 +40,33 @@ const getClientsData = () => {
                 }
 
                 clientsData = data
-                resolve(true)
+
+                setTimeout(() => resolve(true), 1000)
             }
         }
     })
 }
 
-// Print data element in the navigator's DOM
 
-const printRegister = item => {
+const getEntriesNumber = () => {
+    clientsPerPage = entriesNumber.value === 'all' 
+                     ? clientsData.length 
+                     : entriesNumber.value
+
+    if(clientsPerPage > clientsData.length)
+        clientsPerPage = clientsData.length
+}
+
+const getPagesNumber = () => {
+    if(clientsPerPage === 0) return null
+
+    pages = Math.ceil(clientsData.length / clientsPerPage)
+}
+
+const printRegister = (position, item) => {
     rowsClientsContainer.innerHTML += `
         <tr>
+            <td>${position}</td>
             <td><input type="checkbox" name="select"></td>
             <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
             <td>${item.nombre}</td>
@@ -60,36 +77,34 @@ const printRegister = item => {
     `
 }
 
-// Print all the data in the table
-
 const printCompleteClientsData = () => {
-    
+    getEntriesNumber()
+    getPagesNumber()
 
     rowsClientsContainer.innerHTML = ''
 
-    for(let item of clientsData) {
-        printRegister(item)
-    }
+    for(let i = 0; i < clientsPerPage; i++)
+        printRegister(i+1, clientsData[i])
 }
 
-// Get the data that was searched in the text field
 
 const getSearchedClientsData = () => {
-    searchedClientsData = clientsData.filter(item => {
+    searchedClientsData = clientsData.filter(client => {
         if(searchItem.value === 'anything') {
+            client.id = ''
 
-            return Object.values(item).reduce((exist, data) => {
-                if(exist) return exist
+            // Gets the values in the client object and put them into an array
+            // then seeks if the text exists in one of the array's elements
+            for(let data of Object.values(client))
+                if(data.toLowerCase().includes(searchBar.value.toLowerCase()))
+                    return true
 
-                return data.toLowerCase().includes(searchBar.value.toLowerCase())
-            }, false)
+            return false
         }
 
-        return item[searchItem.value].toLowerCase().includes(searchBar.value.toLowerCase())
+        return client[searchItem.value].toLowerCase().includes(searchBar.value.toLowerCase())
     })
 }
-
-// Print the data that was searched in the text field, into the table
 
 const printSearchedClientsData = () => {
     if(searchBar.value !== "") {
@@ -97,16 +112,16 @@ const printSearchedClientsData = () => {
 
         rowsClientsContainer.innerHTML = ''
 
-        for(let item of searchedClientsData) {
-            printRegister(item)
-        }
+        for(let i = 0; i < searchedClientsData.length; i++)
+            printRegister(i+1, searchedClientsData[i])
     }
     else {
         printCompleteClientsData()
     }
 }
 
-// Check or uncheck the client row where we do click
+
+// Checks or unchecks the client row where we do click
 
 const checkRowTable = e => {
     const rows = Array.from(rowsClientsContainer.querySelectorAll('tr'))
@@ -117,7 +132,8 @@ const checkRowTable = e => {
         if(row === parent) {
             const checkbox = parent.querySelector('input')
 
-            checkbox.checked = !checkbox.checked
+            if(checkbox)
+                checkbox.checked = !checkbox.checked
 
             return
         }
@@ -148,3 +164,5 @@ searchBar.addEventListener('keyup', printSearchedClientsData)
 rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
 
 checkboxSelectAll.addEventListener('change', checkAllRowsTable)
+
+entriesNumber.addEventListener('change', printCompleteClientsData)
