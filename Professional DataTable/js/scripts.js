@@ -88,23 +88,25 @@ const printPaginationButtons = () => {
 }
 
 const printRegister = (position, item) => {
-    rowsClientsContainer.innerHTML += `
-        <tr>
-            <td>${position}</td>
-            <td><input type="checkbox" name="select"></td>
-            <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
-            <td>${item.nombre}</td>
-            <td>${item.company}</td>
-            <td>${item.country}</td>
-            <td>${item.email}</td>
-        </tr>
+    const row = document.createElement('tr')
+    
+    row.innerHTML = `
+        <td>${position}</td>
+        <td><input type="checkbox" name="select"></td>
+        <td><span class="status ${item.status.toLowerCase()}">${item.status}</span></td>
+        <td>${item.nombre}</td>
+        <td>${item.company}</td>
+        <td>${item.country}</td>
+        <td>${item.email}</td>
     `
+
+    return row
 }
 
 const printCompleteClientsData = () => {
     getEntriesNumber()
-
     getPagesNumber()
+
     printPaginationButtons()
 
     let initialClient = currentPage * clientsPerPage,
@@ -112,11 +114,15 @@ const printCompleteClientsData = () => {
 
     rowsClientsContainer.innerHTML = ''
 
+    const templateRows = document.createDocumentFragment()
+
     for(let i = initialClient; i <= finalClient; i++) {
         if(i >= clientsData.length) return
 
-        printRegister(i+1, clientsData[i])
+        templateRows.appendChild(printRegister(i+1, clientsData[i]))
     }
+
+    rowsClientsContainer.appendChild(templateRows)
 }
 
 
@@ -145,8 +151,12 @@ const printSearchedClientsData = () => {
         rowsClientsContainer.innerHTML = ''
         paginationContainer.innerHTML = ''
 
+        const templateRows = document.createDocumentFragment()
+
         for(let i = 0; i < searchedClientsData.length; i++)
-            printRegister(i+1, searchedClientsData[i])
+            templateRows.appendChild(printRegister(i+1, searchedClientsData[i]))
+        
+        rowsClientsContainer.appendChild(templateRows)
     }
     else {
         printCompleteClientsData()
