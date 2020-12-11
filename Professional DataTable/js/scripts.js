@@ -22,8 +22,8 @@ const getClientsData = () => {
     return new Promise(resolve => {
         const xhttp = new XMLHttpRequest()
 
-        xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2')
-        // xhttp.open('GET', 'http://www.json-generator.com/api/json/get/ceDXcPLqsy?indent=2') // 3200 Datos
+        // xhttp.open('GET', 'http://www.json-generator.com/api/json/get/bZvyOuDMlK?indent=2')
+        xhttp.open('GET', 'http://www.json-generator.com/api/json/get/ceDXcPLqsy?indent=2') // 3200 Datos
         xhttp.send()
 
         xhttp.onreadystatechange = () => {
@@ -43,7 +43,8 @@ const getClientsData = () => {
 
                 clientsData = data
 
-                setTimeout(() => resolve(true), 1000)
+                // setTimeout(() => , 1000)
+                resolve(true)
             }
         }
     })
@@ -76,6 +77,13 @@ const printPaginationButtons = () => {
                 ${i+1}
             </button>
         `
+
+        if(pages > 6 && i === 4) {
+            paginationContainer.innerHTML += `
+                <span class="divider">...</span>
+            `
+            i = pages - 2
+        }
     }
 }
 
@@ -100,12 +108,15 @@ const printCompleteClientsData = () => {
     printPaginationButtons()
 
     let initialClient = currentPage * clientsPerPage,
-        finalClient = initialClient + clientsPerPage - 1
+        finalClient = initialClient + (clientsPerPage - 1)
 
     rowsClientsContainer.innerHTML = ''
 
-    for(let i = initialClient; i < finalClient; i++)
+    for(let i = initialClient; i <= finalClient; i++) {
+        if(i >= clientsData.length) return
+
         printRegister(i+1, clientsData[i])
+    }
 }
 
 
@@ -155,9 +166,7 @@ const checkRowTable = e => {
             const checkbox = parent.querySelector('input')
 
             if(checkbox)
-                checkbox.checked = !checkbox.checked
-
-            return
+                return checkbox.checked = !checkbox.checked
         }
     }
 }
@@ -170,6 +179,23 @@ const checkAllRowsTable = () => {
         const checkbox = row.querySelector('input')
 
         checkbox.checked = selectAll ? true : false
+    }
+}
+
+
+// Functionality of the buttons in the pagination of the datatable
+
+const getCurrentPage = e => {
+    const buttonsPagination = paginationContainer.querySelectorAll('button')
+
+    for(let button of buttonsPagination) {
+        if(button === e.target) {
+            currentPage = e.target.textContent.trim() - 1
+
+            printCompleteClientsData()
+
+            return
+        }
     }
 }
 
@@ -188,3 +214,5 @@ checkboxSelectAll.addEventListener('change', checkAllRowsTable)
 rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
 
 entriesNumber.addEventListener('change', printCompleteClientsData)
+
+paginationContainer.addEventListener('click', e => getCurrentPage(e))
