@@ -43,7 +43,6 @@ const getClientsData = () => {
 
                 clientsData = data
 
-                // setTimeout(() => , 1000)
                 resolve(true)
             }
         }
@@ -69,7 +68,27 @@ const getPagesNumber = () => {
 const printPaginationButtons = () => {
     paginationContainer.innerHTML = ''
 
-    for(let i = 0; i < pages; i++) {
+    let initialButton = currentPage > 2 ? currentPage - 2 : 0,
+        lastButton = currentPage > pages - 3 ? pages - 1 : initialButton + 4
+
+    if(currentPage > pages - 3) initialButton = pages - 5
+
+    if(pages < 6) {
+        initialButton = 0
+        lastButton = pages - 1
+    }
+    
+
+    if(pages > 5 && initialButton > 0) {
+        paginationContainer.innerHTML += `
+            <button class="pagination-item">
+                ${1}
+            </button>
+            <span class="divider">...</span>
+        `
+    }
+
+    for(let i = initialButton; i <= lastButton; i++) {
         if(entriesNumber.value === 'all') return
 
         paginationContainer.innerHTML += `
@@ -77,15 +96,18 @@ const printPaginationButtons = () => {
                 ${i+1}
             </button>
         `
+    }
 
-        if(pages > 6 && i === 4) {
-            paginationContainer.innerHTML += `
-                <span class="divider">...</span>
-            `
-            i = pages - 2
-        }
+    if(pages > 5 && lastButton < pages - 1) {
+        paginationContainer.innerHTML += `
+            <span class="divider">...</span>
+            <button class="pagination-item">
+                ${pages}
+            </button>
+        `
     }
 }
+
 
 const printRegister = (position, item) => {
     const row = document.createElement('tr')
@@ -201,9 +223,6 @@ const getCurrentPage = e => {
     for(let button of buttonsPagination) {
         if(button === e.target) {
             currentPage = e.target.textContent.trim() - 1
-
-            printCompleteClientsData()
-
             return
         }
     }
@@ -223,6 +242,12 @@ checkboxSelectAll.addEventListener('change', checkAllRowsTable)
 
 rowsClientsContainer.addEventListener('click', e => checkRowTable(e))
 
-entriesNumber.addEventListener('change', printCompleteClientsData)
+entriesNumber.addEventListener('change', () => {
+    currentPage = 0
+    printCompleteClientsData()
+})
 
-paginationContainer.addEventListener('click', e => getCurrentPage(e))
+paginationContainer.addEventListener('click', e => {
+    getCurrentPage(e)
+    printCompleteClientsData()
+})

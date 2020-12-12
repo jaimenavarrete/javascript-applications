@@ -184,7 +184,8 @@ body {
 .container .footer .pagination button {
     font-size: 1em;
     margin-right: .5em;
-    padding: .5em 1em;
+    padding: .5em;
+    width: 3.5em;
 }
 
 .container .footer .pagination .active {
